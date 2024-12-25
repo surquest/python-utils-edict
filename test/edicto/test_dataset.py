@@ -1,5 +1,7 @@
 import pytest
 from surquest.utils.edicto.dataset import Dataset
+from surquest.utils.edicto.attribute import Attribute
+
 
 class TestDataset:
 
@@ -80,3 +82,63 @@ class TestDataset:
 
         out = self.DATASET.select(selection)
         assert out.data == output
+
+    @pytest.mark.parametrize(
+        "selection, output",
+        [
+            (
+                [Attribute("name"), Attribute("yearOfBirth")],
+                [
+                    {
+                        'name': 'Charles Dickens',
+                        'yearOfBirth': 1812
+                    },
+                    {
+                        'name': 'Jane Austen',
+                        'yearOfBirth': 1775
+                    },
+                    {
+                        'name': 'Mark Twain',
+                        'yearOfBirth': 1835
+                    },
+                    {
+                        'name': 'Ernest Hemingway',
+                        'yearOfBirth': 1899
+                    },
+                    {
+                        'name': 'F. Scott Fitzgerald',
+                        'yearOfBirth': 1896
+                    }
+                ]
+                
+            )
+        ]
+    )
+    def test_select_with_attribute(self, selection, output):
+
+        out = self.DATASET.select(selection)
+        assert out.data == output
+
+
+
+    def test_get_nested_value(self):
+
+        d = {'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+        keys = ['location', 'geo', 'lat']
+        assert Dataset.get_nested_value(d, keys) == 51.5074
+
+        d = {'location': 'London'}
+        keys = ['location']
+        assert Dataset.get_nested_value(d, keys) == 'London'
+
+        d = {'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+        keys = ['location', 'city']
+        assert Dataset.get_nested_value(d, keys) == 'London'
+
+        d = {'a': 1}
+        keys = ()
+        assert Dataset.get_nested_value(d, keys) == d
+
+    def test_dataset_len(self):
+
+        assert len(self.DATASET) == 5

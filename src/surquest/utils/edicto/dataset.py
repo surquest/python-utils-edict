@@ -95,46 +95,33 @@ class Dataset:
 
         Returns:
             dict: Nested value from the dictionary
-
-        Example:
-            
-            ```python
-            data = {
-                'a': {
-                    'b': {
-                        'c': 1
-                        'd': 2
-                    },
-                    'e': 3
-                }
-            }
-            Dataset.get_nested_value(data, ['a', 'b', 'c'])
-            # Output: 1
-            # {
-            #    'a': {
-            #        'b': {
-            #            'c': 1
-            #        }
-            #    }
-            # }
-            ```
         """
-
-
-        def get_nested_value(d, keys):
-            for idx, key in enumerate(keys):
-                if idx == len(keys) - 1:
-                    return d.get(key)
-                d = d.get(key, {})
-            return d
     
         names = attribute.names
         aliases = attribute.aliases
 
-        nested_value = get_nested_value(d, names)
+        nested_value = Dataset.get_nested_value(d, names)
         
         renamed_dict = nested_value
         for key, alias in zip(reversed(names), reversed(aliases)):
             renamed_dict = {alias: renamed_dict}
         
         return renamed_dict
+    
+    @staticmethod
+    def get_nested_value(d, keys):
+        """Method to get nested value from a dictionary
+
+        Args:
+            d (dict): Dictionary to get nested value from
+            keys (list[str]): List of keys to get nested value from
+
+        Returns:
+            dict: Nested value from the dictionary
+        """
+
+        for idx, key in enumerate(keys):
+            if idx == len(keys) - 1:
+                return d.get(key)
+            d = d.get(key, {})
+        return d
