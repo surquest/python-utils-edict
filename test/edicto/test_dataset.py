@@ -142,3 +142,61 @@ class TestDataset:
     def test_dataset_len(self):
 
         assert len(self.DATASET) == 5
+
+    @pytest.mark.parametrize(
+        "condition, output",
+        [
+            (
+                Attribute("id") == 1,
+                [{'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}]
+            ),
+            (
+                Attribute("id") < 2,
+                [{'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}]
+            ),
+            (
+                Attribute("id") <= 2,
+                [
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+                ]
+            ),
+            (
+                Attribute("id") > 4,
+                [
+                    {'id': 5, 'name': 'F. Scott Fitzgerald', 'yearOfBirth': 1896, 'yearOfDeath': 1940, 'location': {'city': 'St. Paul', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+                ]
+            ),
+            (
+                Attribute("id") >= 5,
+                [
+                    {'id': 5, 'name': 'F. Scott Fitzgerald', 'yearOfBirth': 1896, 'yearOfDeath': 1940, 'location': {'city': 'St. Paul', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+                ]
+            ),
+            (
+                Attribute("location.country").is_in(["UK"]),
+                [
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+                ]
+            ),
+            (
+                Attribute("location.country").is_not_in(["USA"]),
+                [
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+                ]
+            ),
+            (
+                Attribute("location.country") != "USA",
+                [
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+                ]
+            )
+        ]
+        )
+    def test_filter(self, condition, output):
+
+        out = self.DATASET.filter(condition)
+        assert out.data == output

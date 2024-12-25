@@ -1,9 +1,10 @@
 class Attribute:
 
-    def __init__(self, name):
+    def __init__(self, name, data=None):
 
         self._names = name.split(".")
         self._aliases = name.split(".")
+        self._data = data
 
     def get_alias(self, index=0):
 
@@ -41,3 +42,48 @@ class Attribute:
     @property
     def depth(self):
         return len(self._names)
+
+    def get_value(self, data):
+        """Method returns value from multi-level nested dictionary
+        
+        Args:
+            data (dict): Dictionary to get value from
+
+        Returns:
+            dict: Value from the dictionary
+        """
+
+        for name in self._names:
+            if name == self._names[-1]:
+                return data.get(name, None)
+            data = data.get(name, {})
+        
+        return data
+    
+    def __gt__(self, other):
+        return lambda item: self.get_value(item) > other
+
+    def __lt__(self, other):
+        return lambda item: self.get_value(item) < other
+
+    def __eq__(self, other):
+        return lambda item: self.get_value(item) == other
+
+    def __ge__(self, other):
+        return lambda item: self.get_value(item) >= other
+
+    def __le__(self, other):
+        return lambda item: self.get_value(item) <= other
+
+    def __ne__(self, other):
+        return lambda item: self.get_value(item) != other
+    
+    def is_in(self, other):
+        return lambda item: self.get_value(item) in other
+    
+    def is_not_in(self, other):
+        return lambda item: self.get_value(item) not in other
+
+
+
+    

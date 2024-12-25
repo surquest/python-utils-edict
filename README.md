@@ -19,7 +19,7 @@ pip install edicto
 Once the package is installed you can start using it by importing the `edicto` module:
 
 ```python
-import edicto
+from edicto import Dataset, Attribute as Attr
 
 # Create the edicto dataset
 authors = edicto.Dataset([
@@ -34,13 +34,19 @@ authors = edicto.Dataset([
 authors.select("id", "name")
 
 # Select the attributes and the nested attributes
-authors.select("id", "name", "location.country")
+authors.select(Attr("id"), Attr("name"), "location.country")
+
+# Select the attributes and the nested attributes 
+authors.select(Attr("id"), Attr("name"), Attr("location").get("country"))
+
+# Select the attributes and the nested attributes and alias the columns
+authors.select([Attr("id"), Attr("name"), Attr("location").alias("loc").get("city").alias("town")])
 
 # Filter the records
-authors.filter("yearOfBirth" > 1800).select("id", "name")
+authors.filter(Attr("yearOfBirth") > 1800).select("id", "name")
 
 # Complex filter
-authors.filter("yearOfBirth" > 1800).filter("location.country" == "UK").select("id", "name")
+authors.filter(Attr("yearOfBirth") > 1800).filter(Attr("location.country") == "UK").select("id", "name")
 
 # Join the datasets
 books = edicto.Dataset([

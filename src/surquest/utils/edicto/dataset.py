@@ -58,6 +58,9 @@ class Dataset:
         
         return Dataset(selected_data)
     
+    def filter(self, condition):
+        return Dataset([item for item in self.data if condition(item)])
+    
     @staticmethod
     def get_attribute(attribute):
         """Method to get attribute from a string
