@@ -1,5 +1,5 @@
-
 from .attribute import Attribute
+
 
 class Dataset:
 
@@ -7,6 +7,11 @@ class Dataset:
         self.data = data
 
     def __len__(self):
+        return len(self.data)
+    
+    def count(self):
+        """Method to count number of items in the dataset
+        """
         return len(self.data)
     
     def select(self, *attributes) -> 'Dataset':
@@ -31,7 +36,7 @@ class Dataset:
         ])
         
         # Select attributes 'name', 'yearOfBirth', 'location.city'
-        out = dataset.select(['name', 'yearOfBirth', 'location.city'])
+        out = dataset.select('name', 'yearOfBirth', 'location.city')
 
         # Output:
         out.show()
@@ -59,7 +64,134 @@ class Dataset:
         return Dataset(selected_data)
     
     def filter(self, condition):
+        """Method to filter dataset by condition
+
+        Args:
+            condition (function): Condition to filter
+
+        Returns:
+            Dataset: New dataset with filtered data
+        """
         return Dataset([item for item in self.data if condition(item)])
+    
+    def join(self, other: 'Dataset', on: str|Attribute=None, how="inner", left_on=None, right_on=None):
+        """Method to join two datasets
+
+        Args:
+            other (Dataset): Dataset to join
+            on (str|Attribute): Attribute to join on
+            how (str, optional): Type of join. Defaults to "inner".
+            left_on (str|Attribute, optional): Attribute from left dataset to join on. Defaults to None.
+            right_on (str|Attribute, optional): Attribute from right dataset to join on. Defaults to None.
+
+        Returns:
+            Dataset: New dataset with joined data
+        """
+
+        # Get attributes
+        if left_on is None:
+            left_on = on
+        if right_on is None:
+            right_on = on
+        
+        left_on = self.get_attribute(left_on)
+        right_on = other.get_attribute(right_on)
+
+        joined_data = []
+
+        # Convert data to dictionaries with keys as values of left_on
+        left_data = self.hash_key_value(self.data, left_on)
+        right_data = other.hash_key_value(other.data, right_on)
+
+        if how == "inner":
+            joined_data = self.inner_join(left_data, right_data)
+
+        elif how == "left":
+            joined_data = self._left_join(left_data, right_data)
+
+        elif how == "right":
+            joined_data = self._right_join(left_data, right_data)
+
+        return Dataset(joined_data)
+    
+    @staticmethod
+    def hash_key_value(data: list, on: Attribute):
+        """Method to hash data by key
+
+        Args:
+            data (list): List of dictionaries to hash
+            on (Attribute): Attribute to hash on
+
+        Returns:
+            dict: Hashed data
+        """
+
+        hash_data = {}
+
+        for item in data:
+            key = on.get_value(item)
+            if key in hash_data:
+                hash_data[key].append(item)
+            else:
+                hash_data[key] = [item]
+        
+        return hash_data
+    
+    @staticmethod
+    def inner_join(left_data, right_data):
+        
+        joined_data = []
+
+        for key in left_data:
+            if key in right_data:
+                for left_item in left_data[key]:
+                    for right_item in right_data[key]:
+                        joined_data.append({**left_item, **right_item})
+
+        return joined_data
+    
+    @staticmethod
+    def _left_join(left_data, right_data):
+
+        joined_data = []
+
+        for key in left_data:
+            if key in right_data:
+                for left_item in left_data[key]:
+                    for right_item in right_data[key]:
+                        joined_data.append({**left_item, **right_item})
+            else:
+                for left_item in left_data[key]:
+                    joined_data.append({**left_item, **{key: None for key in right_data}})
+
+        return joined_data
+    
+
+    @staticmethod
+    def _right_join(left_data, right_data):
+            
+        joined_data = []
+
+        for key in right_data:
+            if key in left_data:
+                for right_item in right_data[key]:
+                    for left_item in left_data[key]:
+                        joined_data.append({**left_item, **right_item})
+            else:
+                for right_item in right_data[key]:
+                    joined_data.append({**{key: None for key in left_data}, **right_item})
+        
+        return joined_data
+    
+    def show(self, pretty=False):
+        """Method to print dataset
+        """
+        
+        if pretty:
+            import json
+            print(json.dumps(self.data, indent=4, default=str))
+        else:
+            print(self.data)
     
     @staticmethod
     def get_attribute(attribute):

@@ -63,10 +63,10 @@ books = edicto.Dataset([
 ])
 
 authors.join(
-    dataset=books,
+    other=books,
     left_on="id",
-    right_on="authorId"
-    join_type="inner"
+    right_on="authorId",
+    how="inner"
 ).select("name", "location.country", "title", "year")
 ```
 

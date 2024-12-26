@@ -1,16 +1,47 @@
 import pytest
 from surquest.utils.edicto import Attribute, AND, OR, Dataset
 
+DATASET = Dataset([
+    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+    {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+    {'id': 3, 'name': 'Mark Twain', 'yearOfBirth': 1835, 'yearOfDeath': 1910, 'location': {'city': 'Florida', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+    {'id': 4, 'name': 'Ernest Hemingway', 'yearOfBirth': 1899, 'yearOfDeath': 1961, 'location': {'city': 'Oak Park', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+    {'id': 5, 'name': 'F. Scott Fitzgerald', 'yearOfBirth': 1896, 'yearOfDeath': 1940, 'location': {'city': 'St. Paul', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+])
+
+AUTHORS = Dataset([
+    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK'}},
+    {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK'}},
+    {'id': 3, 'name': 'Mark Twain', 'yearOfBirth': 1835, 'yearOfDeath': 1910, 'location': {'city': 'Florida', 'country': 'USA'}},
+    {'id': 4, 'name': 'Ernest Hemingway', 'yearOfBirth': 1899, 'yearOfDeath': 1961, 'location': {'city': 'Oak Park', 'country': 'USA'}},
+    {'id': 5, 'name': 'F. Scott Fitzgerald', 'yearOfBirth': 1896, 'yearOfDeath': 1940, 'location': {'city': 'St. Paul', 'country': 'USA'}},
+    {'id': 6, 'name': 'Harper Lee', 'yearOfBirth': 1926, 'yearOfDeath': 2016, 'location': {'city': 'Washington', 'country': 'USA'}},
+])
+
+BOOKS = Dataset([
+    {'id': 1, 'title': 'A Tale of Two Cities', 'year': 1859, "author": {"id": 1}},
+    {'id': 2, 'title': 'Great Expectations', 'year': 1861, "author": {"id": 1}},
+    {'id': 3, 'title': 'Pride and Prejudice', 'year': 1813, "author": {"id": 2}},
+    {'id': 4, 'title': 'Sense and Sensibility', 'year': 1811, "author": {"id": 2}},
+    {'id': 5, 'title': 'Adventures of Huckleberry Finn', 'year': 1884, "author": {"id": 3}},
+    {'id': 6, 'title': 'The Adventures of Tom Sawyer', 'year': 1876, "author": {"id": 3}},
+    {'id': 7, 'title': 'The Old Man and the Sea', 'year': 1952, "author": {"id": 4}},
+    {'id': 8, 'title': 'A Farewell to Arms', 'year': 1929, "author": {"id": 4}},
+    {'id': 9, 'title': 'The Great Gatsby', 'year': 1925, "author": {"id": 5}},
+    {'id': 10,'title': 'Tender Is the Night', 'year': 1934, "author": {"id": 5}},
+    {'id': 11,'title': 'Lord of the Rings', 'year': 1954, "author": {"id": 7}},
+])
+
 
 class TestDataset:
 
-    DATASET = Dataset([
-        {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
-        {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
-        {'id': 3, 'name': 'Mark Twain', 'yearOfBirth': 1835, 'yearOfDeath': 1910, 'location': {'city': 'Florida', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
-        {'id': 4, 'name': 'Ernest Hemingway', 'yearOfBirth': 1899, 'yearOfDeath': 1961, 'location': {'city': 'Oak Park', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
-        {'id': 5, 'name': 'F. Scott Fitzgerald', 'yearOfBirth': 1896, 'yearOfDeath': 1940, 'location': {'city': 'St. Paul', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
-    ])
+    DATASET = DATASET
+    AUTHORS = AUTHORS
+    BOOKS = BOOKS
+
+    def test_count(self):
+
+        assert self.DATASET.count() == len(self.DATASET)
 
     @pytest.mark.parametrize(
         "selection, output",
@@ -119,7 +150,6 @@ class TestDataset:
         assert out.data == output
 
 
-
     def test_get_nested_value(self):
 
         d = {'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
@@ -147,16 +177,16 @@ class TestDataset:
         [
             (
                 Attribute("id") == 1,
-                [{'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}]
+                [{'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}]
             ),
             (
                 Attribute("id") < 2,
-                [{'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}]
+                [{'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}]
             ),
             (
                 Attribute("id") <= 2,
                 [
-                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
                     {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
                 ]
             ),
@@ -175,22 +205,37 @@ class TestDataset:
             (
                 Attribute("location.country").is_in(["UK"]),
                 [
-                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
                     {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
                 ]
             ),
             (
                 Attribute("location.country").is_not_in(["USA"]),
                 [
-                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
                     {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
                 ]
             ),
             (
                 Attribute("location.country") != "USA",
                 [
-                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
                     {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+                ]
+            ),
+            (
+                Attribute("yearOfDeath").is_none(),
+                [
+                    {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+                ]
+            ),
+            (
+                Attribute("yearOfDeath").is_not_none(),
+                [
+                    {'id': 2, 'name': 'Jane Austen', 'yearOfBirth': 1775, 'yearOfDeath': 1817, 'location': {'city': 'Steventon', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 3, 'name': 'Mark Twain', 'yearOfBirth': 1835, 'yearOfDeath': 1910, 'location': {'city': 'Florida', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 4, 'name': 'Ernest Hemingway', 'yearOfBirth': 1899, 'yearOfDeath': 1961, 'location': {'city': 'Oak Park', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+                    {'id': 5, 'name': 'F. Scott Fitzgerald', 'yearOfBirth': 1896, 'yearOfDeath': 1940, 'location': {'city': 'St. Paul', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
                 ]
             )
         ]
@@ -211,8 +256,46 @@ class TestDataset:
 
         out = self.DATASET.filter(OR(Attribute("id") > 4, Attribute("id") < 2))
         assert out.data == [
-            {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+            {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
             {'id': 5, 'name': 'F. Scott Fitzgerald', 'yearOfBirth': 1896, 'yearOfDeath': 1940, 'location': {'city': 'St. Paul', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
         ]
+
+    def test_show(self):
+
+        assert self.DATASET.show() == None
+        assert self.DATASET.show(pretty=True) == None
+
+    @pytest.mark.parametrize(
+        "join_options, output",
+        [
+            (
+                {"left_on": "id", "right_on": "author.id", "how": "inner"},
+                10
+            ),
+            (
+                {"left_on": "id", "right_on": "author.id", "how": "left"},
+                11
+            ),
+            (
+                {"left_on": "id", "right_on": "author.id", "how": "right"},
+                11
+            ),
+            (
+                {"on": "id", "right_on": "author.id", "how": "inner"},
+                10
+            ),
+            (
+                {"on": "author.id", "left_on": "id", "how": "inner"},
+                10
+            )
+
+        ]
+    )
+    def test_join(self, join_options, output):
+
+        options = join_options.copy()
+        options["other"] = self.BOOKS
+        count_of = self.AUTHORS.join(**options).count()
+        assert count_of == output
 
 

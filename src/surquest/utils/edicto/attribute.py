@@ -80,3 +80,9 @@ class Attribute:
     
     def is_not_in(self, other):
         return lambda item: self.get_value(item) not in other
+    
+    def is_none(self):
+        return lambda item: self.get_value(item) is None
+    
+    def is_not_none(self):
+        return lambda item: self.get_value(item) is not None
