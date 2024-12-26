@@ -40,7 +40,7 @@ authors.select(Attr("id"), Attr("name"), "location.country")
 authors.select(Attr("id"), Attr("name"), Attr("location").get("country"))
 
 # Select the attributes and the nested attributes and alias the columns
-authors.select([Attr("id"), Attr("name"), Attr("location").alias("loc").get("city").alias("town")])
+authors.select(Attr("id"), Attr("name"), Attr("location").alias("loc").get("city").alias("town"))
 
 # Filter the records
 authors.filter(Attr("yearOfBirth") > 1800).select("id", "name")

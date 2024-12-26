@@ -1,6 +1,5 @@
 import pytest
-from surquest.utils.edicto.dataset import Dataset
-from surquest.utils.edicto.attribute import Attribute
+from surquest.utils.edicto import Attribute, AND, OR, Dataset
 
 
 class TestDataset:
@@ -80,7 +79,7 @@ class TestDataset:
     )
     def test_select(self, selection, output):
 
-        out = self.DATASET.select(selection)
+        out = self.DATASET.select(*selection)
         assert out.data == output
 
     @pytest.mark.parametrize(
@@ -116,7 +115,7 @@ class TestDataset:
     )
     def test_select_with_attribute(self, selection, output):
 
-        out = self.DATASET.select(selection)
+        out = self.DATASET.select(*selection)
         assert out.data == output
 
 
@@ -200,3 +199,20 @@ class TestDataset:
 
         out = self.DATASET.filter(condition)
         assert out.data == output
+
+
+    def test_filter_with_helpers(self):
+
+        out = self.DATASET.filter(AND(Attribute("id") > 1, Attribute("id") < 4)).select("id", "name")
+        assert out.data == [
+            {'id': 2, 'name': 'Jane Austen'},
+            {'id': 3, 'name': 'Mark Twain'}
+        ]
+
+        out = self.DATASET.filter(OR(Attribute("id") > 4, Attribute("id") < 2))
+        assert out.data == [
+            {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': 1870, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
+            {'id': 5, 'name': 'F. Scott Fitzgerald', 'yearOfBirth': 1896, 'yearOfDeath': 1940, 'location': {'city': 'St. Paul', 'country': 'USA', 'geo': {'lat': 51.5074, 'lon': 0.1278}}}
+        ]
+
+

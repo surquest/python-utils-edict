@@ -1,10 +1,9 @@
 class Attribute:
 
-    def __init__(self, name, data=None):
-
-        self._names = name.split(".")
-        self._aliases = name.split(".")
-        self._data = data
+    def __init__(self, name, split_by="."):
+        
+        self._names = name.split(split_by) if isinstance(name, str) else name
+        self._aliases = name.split(split_by) if isinstance(name, str) else name
 
     def get_alias(self, index=0):
 
@@ -57,9 +56,7 @@ class Attribute:
             if name == self._names[-1]:
                 return data.get(name, None)
             data = data.get(name, {})
-        
-        return data
-    
+            
     def __gt__(self, other):
         return lambda item: self.get_value(item) > other
 
@@ -83,7 +80,3 @@ class Attribute:
     
     def is_not_in(self, other):
         return lambda item: self.get_value(item) not in other
-
-
-
-    

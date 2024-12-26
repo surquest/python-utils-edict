@@ -9,7 +9,7 @@ class Dataset:
     def __len__(self):
         return len(self.data)
     
-    def select(self, attributes: list[str]) -> 'Dataset':
+    def select(self, *attributes) -> 'Dataset':
         """Method to select attributes from the dataset
 
         Args:
