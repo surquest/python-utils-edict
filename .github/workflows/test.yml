@@ -48,7 +48,7 @@ jobs:
         cat test.coverage.log                                         # print test coverage log
 
     - name: Publish coverage badge
-      uses: schneegans/dynamic-badges-action@v1.6.0
+      uses: schneegans/dynamic-badges-action@v1.7.0
       with:
         auth: ${{ secrets.GIST_SECRET }}                              # GIST_SECRET is a GitHub personal access token with scope "gist".
         gistID: ${{ secrets.GIST_ID }}                                # https://gist.github.com/surquest/6e25c317000917840152a5e702e71963
