@@ -1,25 +1,27 @@
 # Introduction
 
-This python package simplifies the manipulation with the lists of multi-dimensional dictionaries as you would use SQL or pyspark dataframes. The basic set of supported operations are:
+This Python package provides a straightforward way to manipulate lists of multi-dimensional dictionaries. It includes support for the following core operations:
 
-* selection of the attributes
-* filtering of the records
-* joining of the lists
+* **Attribute Selection**: Easily select specific attributes from your data and nested attributes.
+* **Record Filtering**: Filter records based on custom conditions using a simple syntax.
+* **List Joining**: Perform joins between lists of dictionaries based on a defined key.
+* **Aggregation**: Aggregation function as `count` and `count_distinct` to summarize the data.
 
-The package is designed to simplify to operate small and mid-size datasets but it is not optimized for the big data processing.
+The package is designed for handling small to medium-sized datasets, offering convenience and simplicity. However, it is not optimized for large-scale big data processing.
+
 
 ## Getting Started
 
 The package is available on the PyPi and can be installed by the following command:
 
 ```bash
-pip install edicto
+pip install surquest-utils-qdict
 ```
 
-Once the package is installed you can start using it by importing the `edicto` module:
+Once the package is installed you can start using it by importing the `qdict` module:
 
 ```python
-from edicto import Dataset, Attribute as Attr
+from surquest.utils.qdict import Dataset, Attribute as Attr, AND, OR
 
 # Create the edicto dataset
 authors = edicto.Dataset([
@@ -78,7 +80,7 @@ You are more than welcome to contribute to this project. To make your start easi
 ## Build docker image
 ```
 docker build `
-     --tag surquest/utils/edicto `
+     --tag surquest/utils/qdict `
      --file package.base.dockerfile `
      --target test .
 ```
@@ -88,5 +90,5 @@ docker build `
 docker run --rm -it `
  -v "${pwd}:/opt/project" `
  -w "/opt/project/test" `
- surquest/utils/edicto pytest
+ surquest/utils/qdict pytest
 ```

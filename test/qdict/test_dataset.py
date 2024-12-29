@@ -1,5 +1,5 @@
 import pytest
-from surquest.utils.edicto import Attribute, AND, OR, Dataset
+from surquest.utils.qdict import Attribute, AND, OR, Dataset
 
 DATASET = Dataset([
     {'id': 1, 'name': 'Charles Dickens', 'yearOfBirth': 1812, 'yearOfDeath': None, 'location': {'city': 'London', 'country': 'UK', 'geo': {'lat': 51.5074, 'lon': 0.1278}}},
@@ -298,4 +298,29 @@ class TestDataset:
         count_of = self.AUTHORS.join(**options).count()
         assert count_of == output
 
+
+    @pytest.mark.parametrize(
+        "params, output",
+        [
+            (
+                ["location.country"],
+                2
+            ),
+            (
+                ["location.country", "yearOfBirth"],
+                5
+            ),
+            (
+                [Attribute("id")],
+                5
+            ),
+            (
+                [Attribute("location.geo.lat"), Attribute("location.geo.lon")],
+                1
+            )
+        ]
+    )
+    def test_count_distinct(self, params, output):
+
+        assert self.DATASET.count_distinct(*params) == output
 

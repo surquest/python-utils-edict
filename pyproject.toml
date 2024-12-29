@@ -3,9 +3,9 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "surquest-utils-edicto"
-version = "0.0.1"
-description = "Python package simplifies the manipulation with the lists of multi-dimensional dictionaries as you would use SQL or pyspark dataframes."
+name = "surquest-utils-qdict"
+version = "0.0.1rc1"
+description = "This python on package simplifies the manipulation with the lists of multi-dimensional dictionaries as select, filter or join"
 authors = [
     {name= "Michal Švarc", email= "michal.svarc@surquest.com"}
 ]
@@ -18,8 +18,8 @@ test = [
     "pytest-cov==6.0.0",
 ]
 [project.urls]
-"Homepage" = "https://github.com/surquest/python-utils-edict"
-"Bug Tracker" = "https://github.com/surquest/python-utils-edict/issues"
+"Homepage" = "https://github.com/surquest/python-utils-qdict"
+"Bug Tracker" = "https://github.com/surquest/python-utils-qdict/issues"
 
 [tool.hatch.build.targets.wheel]
 packages = ["surquest"]

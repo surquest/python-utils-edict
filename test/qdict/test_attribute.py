@@ -1,4 +1,5 @@
-from surquest.utils.edicto.attribute import Attribute
+from surquest.utils.qdict import Attribute
+
 
 class TestAttribute:
 

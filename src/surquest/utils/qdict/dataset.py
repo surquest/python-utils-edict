@@ -14,6 +14,23 @@ class Dataset:
         """
         return len(self.data)
     
+    def count_distinct(self, *attributes):
+        """Method to count number of distinct items in the dataset
+
+        Args:
+            attributes (list[str]): List of attributes to count distinct on
+
+        Returns:
+            int: Number of distinct items
+        """
+        distinct_data = set()
+        attrs = [self.get_attribute(attr) for attr in attributes]
+
+        for item in self.data:
+            distinct_data.add(tuple([self.get_nested_value(item, attr.names) for attr in attrs]))
+        
+        return len(distinct_data)
+    
     def select(self, *attributes) -> 'Dataset':
         """Method to select attributes from the dataset
 
