@@ -1,3 +1,8 @@
+![GitHub](https://img.shields.io/github/license/surquest/python-utils-qdict?style=flat-square)
+![GitHub Workflow Status (with branch)](https://img.shields.io/github/actions/workflow/status/surquest/python-utils-qdict/test.yml?branch=main&style=flat-square)
+![Coverage](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/surquest/6e25c317000917840152a5e702e71963/raw/python-utils-qdict.json&style=flat-square)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/surquest-GCP-secret-assessor?style=flat-square)
+
 # Introduction
 
 This Python package provides a straightforward way to manipulate lists of multi-dimensional dictionaries. It includes support for the following core operations:
