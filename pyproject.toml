@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "surquest-utils-qdict"
-version = "0.0.1rc1"
-description = "This python on package simplifies the manipulation with the lists of multi-dimensional dictionaries as select, filter or join"
+version = "0.0.1rc2"
+description = "This python package simplifies the manipulation with the lists of multi-dimensional dictionaries as select, filter or join."
 authors = [
     {name= "Michal Švarc", email= "michal.svarc@surquest.com"}
 ]
